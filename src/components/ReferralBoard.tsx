@@ -29,7 +29,7 @@ export function ReferralBoard() {
       }
     }
     load();
-    const id = window.setInterval(load, 8000);
+    const id = window.setInterval(load, 30000);
     return () => {
       alive = false;
       window.clearInterval(id);
