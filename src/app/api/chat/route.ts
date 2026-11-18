@@ -56,13 +56,28 @@ export async function POST(req: Request) {
     return createUIMessageStreamResponse({ stream });
   }
 
-  const result = streamText({
-    model: resolveModel(),
-    system: buildSystemPrompt(referralCode),
-    messages: await convertToModelMessages(messages),
-    tools: lofridefTools,
-    stopWhen: stepCountIs(6),
-  });
+  try {
+    const result = streamText({
+      model: resolveModel(),
+      system: buildSystemPrompt(referralCode),
+      messages: await convertToModelMessages(messages),
+      tools: lofridefTools,
+      stopWhen: stepCountIs(6),
+    });
 
-  return result.toUIMessageStreamResponse();
+    return result.toUIMessageStreamResponse({
+      onError: (error) => {
+        console.error("[lofridef/chat]", error);
+        return error instanceof Error ? error.message : "Chat failed";
+      },
+    });
+  } catch (error) {
+    console.error("[lofridef/chat] fatal", error);
+    return Response.json(
+      {
+        error: error instanceof Error ? error.message : "Chat failed",
+      },
+      { status: 500 },
+    );
+  }
 }

@@ -1,6 +1,4 @@
 import { nanoid } from "nanoid";
-import { promises as fs } from "fs";
-import path from "path";
 
 export { normalizeReferralCode } from "./referral-code";
 
@@ -20,22 +18,24 @@ export type ReferralBadge = {
   digest?: string;
 };
 
-const DATA_DIR = path.join(process.cwd(), ".data");
-const BADGES_FILE = path.join(DATA_DIR, "badges.json");
+type BadgeStore = {
+  badges: ReferralBadge[];
+};
 
-async function ensureStore() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  try {
-    await fs.access(BADGES_FILE);
-  } catch {
-    await fs.writeFile(BADGES_FILE, "[]", "utf8");
+declare global {
+  // eslint-disable-next-line no-var
+  var __lofridefBadgeStore: BadgeStore | undefined;
+}
+
+function getStore(): BadgeStore {
+  if (!globalThis.__lofridefBadgeStore) {
+    globalThis.__lofridefBadgeStore = { badges: [] };
   }
+  return globalThis.__lofridefBadgeStore;
 }
 
 export async function listBadges(): Promise<ReferralBadge[]> {
-  await ensureStore();
-  const raw = await fs.readFile(BADGES_FILE, "utf8");
-  return JSON.parse(raw) as ReferralBadge[];
+  return [...getStore().badges];
 }
 
 export async function createReferralBadge(input: {
@@ -43,8 +43,7 @@ export async function createReferralBadge(input: {
   newcomerLabel?: string;
   firstAction: FirstAction;
 }): Promise<ReferralBadge> {
-  await ensureStore();
-  const badges = await listBadges();
+  const store = getStore();
   const badge: ReferralBadge = {
     id: `ride_${nanoid(10)}`,
     ambassadorCode: input.ambassadorCode.trim().replace(/^@/, ""),
@@ -53,8 +52,6 @@ export async function createReferralBadge(input: {
     issuedAt: new Date().toISOString(),
     chain: "demo",
   };
-  badges.unshift(badge);
-  await fs.writeFile(BADGES_FILE, JSON.stringify(badges.slice(0, 200), null, 2));
+  store.badges = [badge, ...store.badges].slice(0, 200);
   return badge;
 }
-
