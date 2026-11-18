@@ -20,7 +20,7 @@ export function AppShell() {
 
       <section className="howto">
         <div>
-          <p className="eyebrow">How it works</p>
+          <p className="eyebrow">We are all Lofi</p>
           <h2>From zero to first ride</h2>
         </div>
         <ol>

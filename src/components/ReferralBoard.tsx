@@ -39,7 +39,7 @@ export function ReferralBoard() {
   return (
     <section className="badge-board" id="badges">
       <div className="section-head">
-        <p className="eyebrow">Ambassador attribution</p>
+        <p className="eyebrow">Flurry attribution</p>
         <h2>First Ride badges</h2>
         <p>
           Each successful first action can mint a badge that records who brought the newcomer in.

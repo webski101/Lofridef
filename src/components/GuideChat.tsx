@@ -35,7 +35,7 @@ export function GuideChat({ referralCode }: GuideChatProps) {
   return (
     <section className="guide-shell" id="guide">
       <div className="guide-meta">
-        <p className="eyebrow">Live guide</p>
+        <p className="eyebrow">Ice in our veins</p>
         <h2>Ask lofridef</h2>
         <p>
           Learn Lofi, draft a first swap or donation, and attribute your ride to an ambassador.
@@ -45,7 +45,7 @@ export function GuideChat({ referralCode }: GuideChatProps) {
               Referral locked: <span className="chip">@{referralCode}</span>
             </>
           ) : (
-            <> Add <code>?ref=handle</code> to track who brought you.</>
+            <> Add <code>?ref=handle</code> to track who brought you into the Flurry.</>
           )}
         </p>
       </div>
@@ -67,7 +67,7 @@ export function GuideChat({ referralCode }: GuideChatProps) {
       <div className="chat-panel">
         {messages.length === 0 && (
           <div className="empty-state">
-            <p>Ice thawing… ask anything about getting started with Lofi on Sui.</p>
+            <p>Frozen tips loading… ask anything about getting started with Lofi on Sui.</p>
           </div>
         )}
 

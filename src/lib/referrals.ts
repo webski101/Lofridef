@@ -23,7 +23,6 @@ type BadgeStore = {
 };
 
 declare global {
-  // eslint-disable-next-line no-var
   var __lofridefBadgeStore: BadgeStore | undefined;
 }
 
