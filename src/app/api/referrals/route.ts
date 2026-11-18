@@ -1,8 +1,8 @@
+import { connection } from "next/server";
 import { listBadges } from "@/lib/referrals";
 
-export const dynamic = "force-dynamic";
-
 export async function GET() {
+  await connection();
   const badges = await listBadges();
   return Response.json({
     count: badges.length,
