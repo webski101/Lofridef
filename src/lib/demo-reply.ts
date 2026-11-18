@@ -27,6 +27,52 @@ export async function buildDemoAssistantText(
   const text = lastUserText(messages).toLowerCase();
   const code = normalizeReferralCode(referralCode);
 
+  if (/mystic|nft|tier|reveal|phantom|slush|5555/.test(text)) {
+    const hits = searchKnowledge("mystic yetis nft tiers slush");
+    return [
+      "Mystic Yetis are the Lofi NFT collection on Sui. Minting is over: 5,555, all minted.",
+      "Tiers: 1 OG, 2 Sage, 3 Legend, 4 one-of-a-kind Mystic.",
+      "Reveal them at https://mysticyetissui.lofitheyeti.com/",
+      "Phantom ended Sui support on Sept 24, 2026. Import into Slush if your Yetis are still there. I will never ask for your recovery phrase.",
+      "",
+      hits.map((hit) => `• **${hit.title}**: ${hit.body}`).join("\n"),
+    ].join("\n");
+  }
+
+  if (/legend|xp|leaderboard|rank/.test(text)) {
+    const hits = searchKnowledge("lofi legends xp leaderboard");
+    return [
+      "Lofi Legends is the XP portal: https://legends.lofitheyeti.com/",
+      "Connect a self-custody wallet (and socials) to earn XP.",
+      "The public leaderboard looks at $LOFI holdings, how long you held, NFTs owned and held, donations, total score, and tier.",
+      "Hold $LOFI and a Mystic Yeti in the same wallet for the perks.",
+      "",
+      hits.map((hit) => `• **${hit.title}**: ${hit.body}`).join("\n"),
+    ].join("\n");
+  }
+
+  if (/ambassador program|join ambassador|initiate|flurry legend|ambassador tier/.test(text)) {
+    const hits = searchKnowledge("ambassador program initiates flurry legends");
+    return [
+      "Official ambassador program: https://ambassadors.lofitheyeti.com/",
+      "Tiers: Yeti Initiates (about 8 weeks) → Lofi Ambassadors → Flurry Legends.",
+      "They lead content, campaigns, and community. The page mentions alpha, merch, and compensation, but it does not publish a pay number.",
+      "A lofridef First Ride badge only records who invited you here. It is not official ambassador rank.",
+      "",
+      hits.map((hit) => `• **${hit.title}**: ${hit.body}`).join("\n"),
+    ].join("\n");
+  }
+
+  if (/merch|shop|telegram|instagram|tiktok|social/.test(text)) {
+    const hits = searchKnowledge("merch shop telegram instagram");
+    return [
+      "Merch: https://shop.lofitheyeti.com/",
+      "Socials: X https://x.com/lofitheyeti · Telegram https://t.me/LofiOnSui · Instagram https://www.instagram.com/lofitheyeti · TikTok https://www.tiktok.com/@lofitheyeti",
+      "",
+      hits.map((hit) => `• **${hit.title}**: ${hit.body}`).join("\n"),
+    ].join("\n");
+  }
+
   if (/who is lofi|what is lofi|about lofi|yeti|flurry|lore/.test(text)) {
     const hits = searchKnowledge("lofi yeti flurry lore");
     return [
@@ -63,7 +109,8 @@ export async function buildDemoAssistantText(
       "",
       "1. Use a Sui wallet you control",
       "2. Hold a little SUI for the swap + gas",
-      `3. Swap into type \`${LOFI_TOKEN.type}\` on Aftermath / Turbos / Bluefin`,
+      `3. Swap into type \`${LOFI_TOKEN.type}\` on Aftermath, Turbos, or Bluefin`,
+      "   CEX pages Lofi links include Binance US, KuCoin, MEXC, Gate, LBank, Poloniex, BingX, and Ourbit. Coins left there do not count for NFT or Legends perks.",
       "4. Double-check the type and slippage",
       "",
       "Say “prepare a 10 SUI swap” and I’ll build a confirmation card.",
