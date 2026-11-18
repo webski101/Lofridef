@@ -1,9 +1,11 @@
+import { google } from "@ai-sdk/google";
 import {
   convertToModelMessages,
   createUIMessageStream,
   createUIMessageStreamResponse,
   stepCountIs,
   streamText,
+  type LanguageModel,
 } from "ai";
 import { buildDemoAssistantText } from "@/lib/demo-reply";
 import { normalizeReferralCode } from "@/lib/referral-code";
@@ -12,12 +14,24 @@ import { lofridefTools, type LofridefMessage } from "@/lib/tools";
 
 export const maxDuration = 60;
 
-function hasGateway() {
+function hasLiveModel() {
   return Boolean(
-    process.env.AI_GATEWAY_API_KEY ||
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+      process.env.AI_GATEWAY_API_KEY ||
       process.env.VERCEL_OIDC_TOKEN ||
       process.env.OPENAI_API_KEY,
   );
+}
+
+function resolveModel(): LanguageModel {
+  const configured = process.env.LOFRIDEF_MODEL?.trim();
+
+  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    return google(configured || "gemini-3.8-flash");
+  }
+
+  // AI Gateway / OpenAI-compatible provider/model ids, e.g. openai/gpt-4o-mini
+  return (configured || "openai/gpt-4o-mini") as LanguageModel;
 }
 
 export async function POST(req: Request) {
@@ -27,7 +41,7 @@ export async function POST(req: Request) {
     body.referralCode ?? req.headers.get("x-lofridef-ref"),
   );
 
-  if (!hasGateway()) {
+  if (!hasLiveModel()) {
     const text = await buildDemoAssistantText(messages, referralCode);
     const stream = createUIMessageStream({
       execute: ({ writer }) => {
@@ -43,7 +57,7 @@ export async function POST(req: Request) {
   }
 
   const result = streamText({
-    model: process.env.LOFRIDEF_MODEL || "openai/gpt-4o-mini",
+    model: resolveModel(),
     system: buildSystemPrompt(referralCode),
     messages: await convertToModelMessages(messages),
     tools: lofridefTools,
