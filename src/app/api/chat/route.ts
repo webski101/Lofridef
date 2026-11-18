@@ -38,7 +38,7 @@ function resolveModel(): LanguageModel {
 
   if (apiKey) {
     const google = createGoogleGenerativeAI({ apiKey });
-    return google(configured || "gemini-3.8-flash");
+    return google(configured || "gemini-3-flash-preview");
   }
 
   // AI Gateway / OpenAI-compatible provider/model ids, e.g. openai/gpt-4o-mini
