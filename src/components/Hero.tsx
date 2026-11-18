@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { BRAND } from "@/lib/constants";
 
 export function Hero({ referralCode }: { referralCode: string }) {
@@ -6,9 +7,9 @@ export function Hero({ referralCode }: { referralCode: string }) {
       <div className="hero-glow" aria-hidden />
       <div className="hero-frost" aria-hidden />
       <nav className="topnav">
-        <a className="brand" href="/">
+        <Link className="brand" href="/">
           {BRAND.name}
-        </a>
+        </Link>
         <div className="topnav-links">
           <a href="#guide">Guide</a>
           <a href="#badges">Badges</a>
