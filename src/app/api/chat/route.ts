@@ -1,4 +1,4 @@
-import { google } from "@ai-sdk/google";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import {
   convertToModelMessages,
   createUIMessageStream,
@@ -14,9 +14,18 @@ import { lofridefTools, type LofridefMessage } from "@/lib/tools";
 
 export const maxDuration = 60;
 
+function geminiApiKey() {
+  return (
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+    process.env.GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    ""
+  );
+}
+
 function hasLiveModel() {
   return Boolean(
-    process.env.GOOGLE_GENERATIVE_AI_API_KEY ||
+    geminiApiKey() ||
       process.env.AI_GATEWAY_API_KEY ||
       process.env.VERCEL_OIDC_TOKEN ||
       process.env.OPENAI_API_KEY,
@@ -25,8 +34,10 @@ function hasLiveModel() {
 
 function resolveModel(): LanguageModel {
   const configured = process.env.LOFRIDEF_MODEL?.trim();
+  const apiKey = geminiApiKey();
 
-  if (process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+  if (apiKey) {
+    const google = createGoogleGenerativeAI({ apiKey });
     return google(configured || "gemini-3.8-flash");
   }
 
