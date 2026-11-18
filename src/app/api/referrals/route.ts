@@ -1,5 +1,7 @@
 import { listBadges } from "@/lib/referrals";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const badges = await listBadges();
   return Response.json({
